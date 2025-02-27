@@ -28,4 +28,8 @@ public class Book {
 
     @NotNull
     private Double price;
+
+    @OneToOne (cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image;
 }

@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/java/com/pablodiazjorge/crud/config/CloudinaryConfig.java
