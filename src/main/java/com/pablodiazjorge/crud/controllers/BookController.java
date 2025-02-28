@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.Optional;
 @RequestMapping("/book")
 @CrossOrigin("http://localhost:4200/")
 public class BookController {
+    private static final Logger logger = LoggerFactory.getLogger(BookController.class);
+
     @Autowired
     BookServiceImpl bookServiceImpl;
 
@@ -34,11 +38,12 @@ public class BookController {
         try {
             Book savedBook = bookServiceImpl.saveBook(book, file);
             return new ResponseEntity<>(savedBook, HttpStatus.OK);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
+            logger.error("Error at PostMapping-saveBook() method", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 
     /**
      * Updates the image of a book by its ID.
