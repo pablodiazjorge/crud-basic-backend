@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,9 +86,20 @@ public class BookController {
         }
     }
 
+    /**
+     * Retrieves a paginated list of all books.
+     *
+     * @param page The page number (default is 0).
+     * @param size The number of items per page (default is 10).
+     * @return ResponseEntity<Page<Book>> - A paginated list of books with HTTP status OK.
+     */
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks(){
-        return new ResponseEntity<>(bookServiceImpl.getBooks(),HttpStatus.OK);
+    public ResponseEntity<Page<Book>> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> bookPage = bookServiceImpl.getBooks(pageable);
+        return new ResponseEntity<>(bookPage, HttpStatus.OK);
     }
 
     /**
