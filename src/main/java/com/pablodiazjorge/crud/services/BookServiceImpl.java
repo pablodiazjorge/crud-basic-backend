@@ -1,6 +1,7 @@
 package com.pablodiazjorge.crud.services;
 
 import com.pablodiazjorge.crud.entities.Book;
+import com.pablodiazjorge.crud.dto.BookWithImageDTO;
 import com.pablodiazjorge.crud.entities.Image;
 import com.pablodiazjorge.crud.repositories.BookRepository;
 import org.springframework.data.domain.Page;
@@ -47,8 +48,8 @@ public class BookServiceImpl implements BookService{
 
 
     @Override
-    public Page<Book> getBooks(Pageable pageable) {
-        return bookRepository.findAll(pageable);
+    public Page<BookWithImageDTO> getBooks(Pageable pageable, String query) {
+        return bookRepository.findByTitleOrAuthorContainingIgnoreCase(query, pageable);
     }
 
 

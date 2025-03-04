@@ -1,6 +1,7 @@
 package com.pablodiazjorge.crud.controllers;
 
 import com.pablodiazjorge.crud.entities.Book;
+import com.pablodiazjorge.crud.dto.BookWithImageDTO;
 import com.pablodiazjorge.crud.services.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -94,11 +95,15 @@ public class BookController {
      * @return ResponseEntity<Page<Book>> - A paginated list of books with HTTP status OK.
      */
     @GetMapping
-    public ResponseEntity<Page<Book>> getAllBooks(
+    public ResponseEntity<Page<BookWithImageDTO>> getAllBooks(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Book> bookPage = bookServiceImpl.getBooks(pageable);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<BookWithImageDTO> bookPage = bookServiceImpl.getBooks(pageable, query);
         return new ResponseEntity<>(bookPage, HttpStatus.OK);
     }
 
